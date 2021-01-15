@@ -1,16 +1,22 @@
 package by.unvisiblee.questionnaireApp.service;
 
-import by.unvisiblee.questionnaireApp.Repository.UserRepository;
-import by.unvisiblee.questionnaireApp.Repository.VerificationTokenRepository;
+import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
+import by.unvisiblee.questionnaireApp.exception.UserAlreadyExistException;
+import by.unvisiblee.questionnaireApp.repository.UserRepository;
+import by.unvisiblee.questionnaireApp.repository.VerificationTokenRepository;
 import by.unvisiblee.questionnaireApp.dto.RegisterRequest;
+import by.unvisiblee.questionnaireApp.model.NotificationEmail;
 import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.model.VerificationToken;
+import by.unvisiblee.questionnaireApp.util.MailService;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,12 +27,20 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    VerificationTokenRepository verificationTokenRepository;
+    private VerificationTokenRepository verificationTokenRepository;
+    @Autowired
+    private MailService mailService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
-        User user = new User();
 
+        if (userRepository.findByUsername(registerRequest.getUsername()).isPresent())
+            throw new UserAlreadyExistException(registerRequest.getUsername(), "username");
+        if (userRepository.findByEmail(registerRequest.getEmail().toLowerCase()).isPresent())
+            throw new UserAlreadyExistException(registerRequest.getEmail(), "email");
+
+
+        User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -38,9 +52,15 @@ public class AuthService {
 
         userRepository.save(user);
         String token = generateVerificationToken(user);
+
+        mailService.sendMail(new NotificationEmail(user.getEmail(), "Please Activate your Account",
+                 "Thank you for signing up to Spring Reddit, " +
+                "please click on the below url to activate your account : " +
+                "http://localhost:8080/api/auth/verification/" + token));
     }
 
-    private String generateVerificationToken(User user) {
+    @Transactional
+    String generateVerificationToken(User user) {
         String verificationTokenString = UUID.randomUUID().toString();
 
         VerificationToken verificationToken = new VerificationToken();
@@ -51,4 +71,23 @@ public class AuthService {
 
         return verificationTokenString;
     }
+
+    public void verifyAccountByToken(String token) {
+        Optional<VerificationToken> verificationToken =  verificationTokenRepository.findByToken(token);
+        if (verificationToken.isEmpty()) {
+            throw new QuestionnaireServiceException("Token does not exist!");
+        }
+        
+        activateUser(verificationToken.get());
+
+    }
+
+    @Transactional
+    void activateUser(VerificationToken verificationToken) {
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+
 }
