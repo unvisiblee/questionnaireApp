@@ -1,5 +1,7 @@
 package by.unvisiblee.questionnaireApp.service;
 
+import by.unvisiblee.questionnaireApp.dto.AuthResponse;
+import by.unvisiblee.questionnaireApp.dto.LoginRequest;
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
 import by.unvisiblee.questionnaireApp.exception.UserAlreadyExistException;
 import by.unvisiblee.questionnaireApp.repository.UserRepository;
@@ -8,9 +10,13 @@ import by.unvisiblee.questionnaireApp.dto.RegisterRequest;
 import by.unvisiblee.questionnaireApp.model.NotificationEmail;
 import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.model.VerificationToken;
+import by.unvisiblee.questionnaireApp.security.JwtProvider;
 import by.unvisiblee.questionnaireApp.util.MailService;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +36,10 @@ public class AuthService {
     private VerificationTokenRepository verificationTokenRepository;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -90,4 +100,10 @@ public class AuthService {
     }
 
 
+    public AuthResponse login(LoginRequest loginRequest) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        String authToken = jwtProvider.generateToken(auth);
+        return new AuthResponse(authToken, loginRequest.getUsername());
+    }
 }
