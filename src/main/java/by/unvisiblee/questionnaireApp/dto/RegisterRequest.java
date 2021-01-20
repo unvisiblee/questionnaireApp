@@ -1,5 +1,7 @@
 package by.unvisiblee.questionnaireApp.dto;
 
+import by.unvisiblee.questionnaireApp.validation.PasswordMatches;
+import by.unvisiblee.questionnaireApp.validation.ValidEmail;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -7,11 +9,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-
+@PasswordMatches
 public class RegisterRequest {
     @NotBlank
     private String username;
     @NotBlank
+    @ValidEmail
     private String email;
     @NotBlank
     private String password;
@@ -24,10 +27,11 @@ public class RegisterRequest {
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String username, String email, String password, String firstName, String lastName, String phoneNumber) {
+    public RegisterRequest(@NotBlank String username, @NotBlank String email, @NotBlank String password, @NotBlank String passwordConfirm, String firstName, String lastName, String phoneNumber) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.passwordConfirm = passwordConfirm;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;

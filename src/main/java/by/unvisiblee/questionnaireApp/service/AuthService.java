@@ -13,6 +13,7 @@ import by.unvisiblee.questionnaireApp.model.VerificationToken;
 import by.unvisiblee.questionnaireApp.security.JwtProvider;
 import by.unvisiblee.questionnaireApp.util.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

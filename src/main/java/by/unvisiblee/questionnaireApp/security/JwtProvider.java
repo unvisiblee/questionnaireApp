@@ -1,6 +1,7 @@
 package by.unvisiblee.questionnaireApp.security;
 
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
+import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+
+import static io.jsonwebtoken.Jwts.parser;
 
 @Service
 public class JwtProvider {
@@ -45,4 +48,26 @@ public class JwtProvider {
     }
 
 
+    public boolean validateToken(String jwt) {
+        Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+        return true;
+    }
+
+    private PublicKey getPublicKey() {
+        try {
+            return keyStore.getCertificate("questionnaire").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new QuestionnaireServiceException("Error occurred while " +
+                    "retrieving public key from keystore", e);
+        }
+    }
+
+    public String getUsernameFromJwt(String jwt) {
+        Claims claims = parser()
+                .setSigningKey(getPublicKey())
+                .parseClaimsJws(jwt)
+                .getBody();
+
+        return claims.getSubject();
+    }
 }
