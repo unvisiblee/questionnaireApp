@@ -11,11 +11,14 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "token")
     private String token;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @Column(name = "expiration_date")
     private Instant expirationDate;
 
     public VerificationToken() {

@@ -1,12 +1,11 @@
 package by.unvisiblee.questionnaireApp.exception;
 
 public class UserAlreadyExistException extends RuntimeException {
-    String field; // email or username
-    String value;
+    private String field; // email or username
+    private String value;
 
 
     public UserAlreadyExistException(String value, String fieldValue) {
-        super();
         this.field = fieldValue;
         this.value = value;
     }

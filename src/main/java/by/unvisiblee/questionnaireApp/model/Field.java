@@ -3,14 +3,20 @@ package by.unvisiblee.questionnaireApp.model;
 import javax.persistence.*;
 
 @Entity
-public class Field {
-    @Id
-    @GeneratedValue
-    private Long id;
+@Table(name = "field")
+public class Field extends BaseEntity{
 
+    @Column(name = "label")
     private String label;
+
+    @Column(name = "field_type")
+    @Enumerated(EnumType.STRING)
     private FieldType fieldType;
+
+    @Column(name = "required")
     private boolean required;
+
+    @Column(name = "active")
     private boolean active;
 
     @ManyToOne
@@ -18,23 +24,6 @@ public class Field {
     private Form form;
 
     public Field() {
-    }
-
-    public Field(Long id, String label, FieldType fieldType, boolean required, boolean active, Form form) {
-        this.id = id;
-        this.label = label;
-        this.fieldType = fieldType;
-        this.required = required;
-        this.active = active;
-        this.form = form;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLabel() {

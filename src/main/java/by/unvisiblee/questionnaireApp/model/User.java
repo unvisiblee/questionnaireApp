@@ -1,29 +1,42 @@
 package by.unvisiblee.questionnaireApp.model;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "usr")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class User extends BaseEntity {
 
-    @NotBlank (message = "Username can't be empty")
+    @Column(name = "username")
     private String username;
 
-    @NotBlank(message = "Email can't be empty")
+    @Column(name = "email")
     private String email;
 
-    @NotBlank(message = "Password can't be empty")
+    @Column(name = "password")
     private String password;
 
+    @OneToMany
+    @JoinTable(name = "user_forms")
+    private List<Form> forms;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "created")
     private Instant created;
+
+    @Column(name = "enabled")
     private Boolean enabled;
 
 
@@ -31,8 +44,8 @@ public class User {
     public User() {
     }
 
-    public User(Long id, @NotBlank(message = "Username can't be empty") String username, @NotBlank(message = "Email can't be empty") String email, @NotBlank(message = "Password can't be empty") String password, String firstName, String lastName, String phoneNumber, Instant created, Boolean enabled) {
-        this.id = id;
+    public User(Long id, String username, String email, String password, String firstName, String lastName, String phoneNumber, Instant created, Boolean enabled) {
+        this.setId(id);
         this.username = username;
         this.email = email;
         this.password = password;
@@ -41,14 +54,6 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.created = created;
         this.enabled = enabled;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {

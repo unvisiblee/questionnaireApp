@@ -33,6 +33,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleUserAlreadyExistException(UserAlreadyExistException ex, WebRequest request) {
         logger.error("400 Status Code");
         GenericResponse responseBody = new GenericResponse("User with " + ex.getField() + " " + ex.getValue() + " Already exists", "UserAlreadyExists");
-        return handleExceptionInternal(ex, responseBody, new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return handleExceptionInternal(ex, responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

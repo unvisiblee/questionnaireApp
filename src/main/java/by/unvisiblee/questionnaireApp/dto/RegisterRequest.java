@@ -24,18 +24,7 @@ public class RegisterRequest {
     private String lastName;
     private String phoneNumber;
 
-    public RegisterRequest() {
-    }
 
-    public RegisterRequest(@NotBlank String username, @NotBlank String email, @NotBlank String password, @NotBlank String passwordConfirm, String firstName, String lastName, String phoneNumber) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.passwordConfirm = passwordConfirm;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getUsername() {
         return username;

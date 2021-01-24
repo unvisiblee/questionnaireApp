@@ -1,7 +1,9 @@
 package by.unvisiblee.questionnaireApp.security;
 
+import by.unvisiblee.questionnaireApp.exception.JwtException;
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
 import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
@@ -18,17 +20,23 @@ import static io.jsonwebtoken.Jwts.parser;
 @Service
 public class JwtProvider {
 
-    private KeyStore keyStore;
+    private  KeyStore keyStore;
+    private static final String KEY_STORE_ALIAS = "questionnaire";
+
 
     @PostConstruct
     public void init() {
         try {
-            keyStore = KeyStore.getInstance("JKS");
-            InputStream keyStoreAsStream = getClass().getResourceAsStream("/questionnaire.jks");
-            keyStore.load(keyStoreAsStream, "secret".toCharArray());
-        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new QuestionnaireServiceException("Error occurred while initiating keystore");
+            InputStream keyStoreAsStream = getClass().getResourceAsStream("/" + KEY_STORE_ALIAS + ".jks");
+            keyStore.load(keyStoreAsStream, System.getenv("KEYSTORE_PASS").toCharArray());
+        } catch (CertificateException | NoSuchAlgorithmException | IOException e) {
+            throw new JwtException("Error occurred while initiating keystore");
         }
+    }
+
+    @Autowired
+    public void setKeyStore(KeyStore keyStore) {
+        this.keyStore = keyStore;
     }
 
     public String generateToken(Authentication authentication) {
@@ -41,9 +49,9 @@ public class JwtProvider {
 
     private PrivateKey getPrivateKey() {
         try {
-            return (PrivateKey) keyStore.getKey("questionnaire", "secret".toCharArray());
+            return (PrivateKey) keyStore.getKey(KEY_STORE_ALIAS, System.getenv("KEYSTORE_PASS").toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
-            throw new QuestionnaireServiceException("Error occured while getting private key from the keystore");
+            throw new JwtException("Error occured while getting private key from the keystore");
         }
     }
 
@@ -55,9 +63,9 @@ public class JwtProvider {
 
     private PublicKey getPublicKey() {
         try {
-            return keyStore.getCertificate("questionnaire").getPublicKey();
+            return keyStore.getCertificate(KEY_STORE_ALIAS).getPublicKey();
         } catch (KeyStoreException e) {
-            throw new QuestionnaireServiceException("Error occurred while " +
+            throw new JwtException("Error occurred while " +
                     "retrieving public key from keystore", e);
         }
     }

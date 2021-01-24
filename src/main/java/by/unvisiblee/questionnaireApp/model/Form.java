@@ -4,15 +4,33 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Form {
+@Table(name = "form")
+public class Form extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "form_fields")
+    private List <Field> fields;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Field> fields;
-
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public Form() {
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

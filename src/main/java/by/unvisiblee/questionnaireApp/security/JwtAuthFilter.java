@@ -19,10 +19,8 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter  {
-    @Autowired
     private JwtProvider jwtProvider;
-    @Qualifier("userDetailsServiceImpl")
-    @Autowired
+
     private UserDetailsService userDetailsService;
 
     @Override
@@ -52,4 +50,13 @@ public class JwtAuthFilter extends OncePerRequestFilter  {
         }
         return bearerToken;
     }
+
+/*    @Autowired
+    public void setJwtProvider(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
+    @Autowired
+    public void setUserDetailsService(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }*/
 }

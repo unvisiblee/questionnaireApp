@@ -5,26 +5,21 @@ import by.unvisiblee.questionnaireApp.model.FieldType;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class FieldDto {
     @NotBlank
     private String label;
-    @NotBlank
+    @NotNull
     private FieldType fieldType;
-    @NotBlank
-    private boolean required;
-    @NotBlank
-    private boolean active;
+    @NotNull
+    private Boolean required;
+    @NotNull
+    private Boolean active;
 
     public FieldDto() {
     }
 
-    public FieldDto(String label, FieldType fieldType, boolean required, boolean active) {
-        this.label = label;
-        this.fieldType = fieldType;
-        this.required = required;
-        this.active = active;
-    }
 
     public String getLabel() {
         return label;

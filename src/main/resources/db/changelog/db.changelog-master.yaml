@@ -1,0 +1,281 @@
+databaseChangeLog:
+- changeSet:
+    id: 1611429366303-1
+    author: unvisiblee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: field_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: active
+            type: BOOLEAN
+        - column:
+            name: field_type
+            type: VARCHAR(255)
+        - column:
+            name: label
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: required
+            type: BOOLEAN
+        - column:
+            name: form_id
+            type: BIGINT
+        tableName: field
+- changeSet:
+    id: 1611429366303-2
+    author: unvisiblee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: form_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: user_id
+            type: BIGINT
+        tableName: form
+- changeSet:
+    id: 1611429366303-3
+    author: unvisiblee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: form_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: fields_id
+            type: BIGINT
+        tableName: form_fields
+- changeSet:
+    id: 1611429366303-4
+    author: unvisiblee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usr_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: enabled
+            type: BOOLEAN
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: phone_number
+            type: VARCHAR(255)
+        - column:
+            name: username
+            type: VARCHAR(255)
+        tableName: usr
+- changeSet:
+    id: 1611429366303-5
+    author: unvisiblee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: verification_token_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: expiration_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: token
+            type: VARCHAR(255)
+        - column:
+            name: user_id
+            type: BIGINT
+        tableName: verification_token
+- changeSet:
+    id: 1611429366303-6
+    author: unvisiblee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: forms_id
+            type: BIGINT
+        tableName: user_forms
+- changeSet:
+    id: 1611429366303-7
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: fields_id
+        baseTableName: form_fields
+        constraintName: fk785uuku5axshwitce6byh7433
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: field
+        validate: true
+- changeSet:
+    id: 1611429366303-8
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: form_id
+        baseTableName: form_fields
+        constraintName: fk1wng9ijav5mar32b6bi2vwfk7
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: form
+        validate: true
+- changeSet:
+    id: 1611429366303-9
+    author: unvisiblee (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: fields_id
+        constraintName: uk_qyes453jb4ho6jt8bwjcdninr
+        tableName: form_fields
+- changeSet:
+    id: 1611429366303-10
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: verification_token
+        constraintName: fk5fi7mv5p74mow94h0xxw50rui
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: usr
+        validate: true
+- changeSet:
+    id: 1611429366303-11
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: user_forms
+        constraintName: fk7rtj4tg0h2exbv91sguhhv2xg
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: usr
+        validate: true
+- changeSet:
+    id: 1611429366303-12
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: forms_id
+        baseTableName: user_forms
+        constraintName: fkpfoe95aabkdxf1nw15bns83po
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: form
+        validate: true
+- changeSet:
+    id: 1611429366303-13
+    author: unvisiblee (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: forms_id
+        constraintName: uk_odf0xt9xwvcvvsydvhvxthw1g
+        tableName: user_forms
+- changeSet:
+    id: 1611429366303-14
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: form_id
+        baseTableName: field
+        constraintName: fkbmb5pgl0uv4s9vakn9w5y7ko8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: form
+        validate: true
+- changeSet:
+    id: 1611429366303-15
+    author: unvisiblee (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: form
+        constraintName: fkmkrvq33r5o5s3u0oo4vgx7jsm
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: usr
+        validate: true
+- changeSet:
+    id: 1611429366303-16
+    author: unvisiblee (generated)
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: hibernate_sequence
+        startValue: 1
+

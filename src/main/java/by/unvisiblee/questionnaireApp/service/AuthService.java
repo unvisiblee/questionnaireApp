@@ -29,25 +29,31 @@ import java.util.UUID;
 @Service
 public class AuthService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private VerificationTokenRepository verificationTokenRepository;
-    @Autowired
-    private MailService mailService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
+
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository,
+                       VerificationTokenRepository verificationTokenRepository,
+                       MailService mailService, AuthenticationManager authenticationManager,
+                       JwtProvider jwtProvider) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.mailService = mailService;
+        this.authenticationManager = authenticationManager;
+        this.jwtProvider = jwtProvider;
+    }
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
 
-        if (userRepository.findByUsername(registerRequest.getUsername()).isPresent())
+        if (userRepository.existsByUsername(registerRequest.getUsername()))
             throw new UserAlreadyExistException(registerRequest.getUsername(), "username");
-        if (userRepository.findByEmail(registerRequest.getEmail().toLowerCase()).isPresent())
+        if (userRepository.existsByEmail(registerRequest.getEmail().toLowerCase()))
             throw new UserAlreadyExistException(registerRequest.getEmail(), "email");
 
 
