@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class FieldDto {
+public class FieldRequest {
     @NotBlank
     private String label;
     @NotNull
@@ -19,7 +19,7 @@ public class FieldDto {
     @NotNull
     private Long formId;
 
-    public FieldDto() {
+    public FieldRequest() {
     }
 
 

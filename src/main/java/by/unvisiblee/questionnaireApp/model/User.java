@@ -20,8 +20,7 @@ public class User extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany
-    @JoinTable(name = "user_forms")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Form> forms;
 
     @Column(name = "first_name")

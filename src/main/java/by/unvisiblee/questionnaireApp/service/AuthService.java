@@ -12,12 +12,11 @@ import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.model.VerificationToken;
 import by.unvisiblee.questionnaireApp.security.JwtProvider;
 import by.unvisiblee.questionnaireApp.util.MailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,17 +34,27 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final FormService formService;
 
     public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository,
                        VerificationTokenRepository verificationTokenRepository,
                        MailService mailService, AuthenticationManager authenticationManager,
-                       JwtProvider jwtProvider) {
+                       JwtProvider jwtProvider, FormService formService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.formService = formService;
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
     }
 
     @Transactional
@@ -104,6 +113,8 @@ public class AuthService {
         User user = verificationToken.getUser();
         user.setEnabled(true);
         userRepository.save(user);
+
+        formService.create(user); // when user is activated - create blank form.
     }
 
 

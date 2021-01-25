@@ -1,6 +1,7 @@
 package by.unvisiblee.questionnaireApp.mapper;
 
-import by.unvisiblee.questionnaireApp.dto.FieldDto;
+import by.unvisiblee.questionnaireApp.dto.FieldRequest;
+import by.unvisiblee.questionnaireApp.dto.FieldResponse;
 import by.unvisiblee.questionnaireApp.model.Field;
 import by.unvisiblee.questionnaireApp.model.Form;
 import org.mapstruct.InheritInverseConfiguration;
@@ -13,9 +14,10 @@ public interface FieldMapper {
 
     FieldMapper INSTANCE = Mappers.getMapper( FieldMapper.class );
 
-    FieldDto fieldToFieldDto(Field field);
+    @Mapping(target = "formId", expression = "java(field.getForm().getId())" )
+    FieldResponse fieldToFieldDto(Field field);
 
     @InheritInverseConfiguration
     @Mapping(target = "form", source = "form")
-    Field fieldDtoToField(FieldDto fieldDto, Form form);
+    Field fieldDtoToField(FieldRequest fieldRequest, Form form);
 }
