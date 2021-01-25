@@ -21,6 +21,9 @@ databaseChangeLog:
             name: field_type
             type: VARCHAR(255)
         - column:
+            constraints:
+                nullable: false
+                unique: true
             name: label
             type: VARCHAR(255)
         - column:
@@ -50,23 +53,6 @@ databaseChangeLog:
             type: BIGINT
         tableName: form
 - changeSet:
-    id: 1611429366303-3
-    author: unvisiblee (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-            name: form_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: fields_id
-            type: BIGINT
-        tableName: form_fields
-- changeSet:
     id: 1611429366303-4
     author: unvisiblee (generated)
     changes:
@@ -83,6 +69,9 @@ databaseChangeLog:
             name: created
             type: TIMESTAMP WITHOUT TIME ZONE
         - column:
+            constraints:
+                nullable: false
+                unique: true
             name: email
             type: VARCHAR(255)
         - column:
@@ -95,12 +84,17 @@ databaseChangeLog:
             name: last_name
             type: VARCHAR(255)
         - column:
+            constraints:
+                nullable: false
             name: password
             type: VARCHAR(255)
         - column:
             name: phone_number
             type: VARCHAR(255)
         - column:
+            constraints:
+                nullable: false
+                unique: true
             name: username
             type: VARCHAR(255)
         tableName: usr
@@ -144,44 +138,6 @@ databaseChangeLog:
             name: forms_id
             type: BIGINT
         tableName: user_forms
-- changeSet:
-    id: 1611429366303-7
-    author: unvisiblee (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: fields_id
-        baseTableName: form_fields
-        constraintName: fk785uuku5axshwitce6byh7433
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: field
-        validate: true
-- changeSet:
-    id: 1611429366303-8
-    author: unvisiblee (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: form_id
-        baseTableName: form_fields
-        constraintName: fk1wng9ijav5mar32b6bi2vwfk7
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: form
-        validate: true
-- changeSet:
-    id: 1611429366303-9
-    author: unvisiblee (generated)
-    changes:
-    - addUniqueConstraint:
-        columnNames: fields_id
-        constraintName: uk_qyes453jb4ho6jt8bwjcdninr
-        tableName: form_fields
 - changeSet:
     id: 1611429366303-10
     author: unvisiblee (generated)

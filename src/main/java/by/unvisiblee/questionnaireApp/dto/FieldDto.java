@@ -16,10 +16,36 @@ public class FieldDto {
     private Boolean required;
     @NotNull
     private Boolean active;
+    @NotNull
+    private Long formId;
 
     public FieldDto() {
     }
 
+
+    public Boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Long getFormId() {
+        return formId;
+    }
+
+    public void setFormId(Long formId) {
+        this.formId = formId;
+    }
 
     public String getLabel() {
         return label;

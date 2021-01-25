@@ -51,12 +51,12 @@ public class JwtAuthFilter extends OncePerRequestFilter  {
         return bearerToken;
     }
 
-/*    @Autowired
+    @Autowired
     public void setJwtProvider(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
     }
     @Autowired
     public void setUserDetailsService(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-    }*/
+    }
 }

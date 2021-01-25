@@ -3,13 +3,13 @@ package by.unvisiblee.questionnaireApp.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "field")
+@Table(name = "field", schema = "public")
 public class Field extends BaseEntity{
 
-    @Column(name = "label")
+    @Column(name = "label", unique = true, nullable = false)
     private String label;
 
-    @Column(name = "field_type")
+    @Column(name = "field_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private FieldType fieldType;
 
