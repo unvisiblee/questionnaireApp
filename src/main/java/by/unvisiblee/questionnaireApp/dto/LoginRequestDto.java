@@ -2,7 +2,7 @@ package by.unvisiblee.questionnaireApp.dto;
 
 import javax.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class LoginRequestDto {
     @NotBlank
     private String username;
     @NotBlank

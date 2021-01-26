@@ -1,6 +1,9 @@
 package by.unvisiblee.questionnaireApp.model;
 
+import org.hibernate.annotations.CollectionType;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "field", schema = "public")
@@ -16,12 +19,23 @@ public class Field extends BaseEntity{
     @Column(name = "required")
     private boolean required;
 
+    @ElementCollection
+    private List<String> options;
+
     @Column(name = "active")
     private boolean active;
 
     @ManyToOne
     @JoinColumn(name="form_id", referencedColumnName="id")
     private Form form;
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
 
     public Field() {
     }

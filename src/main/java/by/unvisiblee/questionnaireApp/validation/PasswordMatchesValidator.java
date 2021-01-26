@@ -1,14 +1,13 @@
 package by.unvisiblee.questionnaireApp.validation;
 
-import by.unvisiblee.questionnaireApp.dto.RegisterRequest;
+import by.unvisiblee.questionnaireApp.dto.RegisterRequestDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.Validator;
 
-public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegisterRequest> {
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegisterRequestDto> {
     @Override
-    public boolean isValid(RegisterRequest value, ConstraintValidatorContext context) {
+    public boolean isValid(RegisterRequestDto value, ConstraintValidatorContext context) {
         return value.getPassword().equals(value.getPasswordConfirm());
     }
 }

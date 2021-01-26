@@ -1,7 +1,7 @@
 package by.unvisiblee.questionnaireApp.service;
 
-import by.unvisiblee.questionnaireApp.dto.FieldRequest;
-import by.unvisiblee.questionnaireApp.dto.FieldResponse;
+import by.unvisiblee.questionnaireApp.dto.FieldRequestDto;
+import by.unvisiblee.questionnaireApp.dto.FieldResponseDto;
 import by.unvisiblee.questionnaireApp.exception.FieldNotFoundException;
 import by.unvisiblee.questionnaireApp.exception.FormNotFoundException;
 import by.unvisiblee.questionnaireApp.mapper.FieldMapper;
@@ -9,8 +9,9 @@ import by.unvisiblee.questionnaireApp.model.Field;
 import by.unvisiblee.questionnaireApp.model.Form;
 import by.unvisiblee.questionnaireApp.repository.FieldRepository;
 import by.unvisiblee.questionnaireApp.repository.FormRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring5.expression.Fields;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class FieldService {
+    private final Logger logger = LoggerFactory.getLogger(FieldService.class);
     private final FieldMapper fieldMapper;
     private final FormRepository formRepository;
     private final FieldRepository fieldRepository;
@@ -29,22 +31,23 @@ public class FieldService {
     }
 
     @Transactional
-    public void create(FieldRequest fieldRequest) {
-        Form form = formRepository.findById(fieldRequest.getFormId())
-                    .orElseThrow(() -> new FormNotFoundException(fieldRequest.getFormId().toString()));
+    public void create(FieldRequestDto fieldRequestDto) {
+        Form form = formRepository.findById(fieldRequestDto.getFormId())
+                    .orElseThrow(() -> new FormNotFoundException(fieldRequestDto.getFormId().toString()));
 
-        Field field = fieldMapper.fieldDtoToField(fieldRequest, form);
+        Field field = fieldMapper.fieldDtoToField(fieldRequestDto, form);
         fieldRepository.save(field);
+        logger.info("Created field: " + field.getLabel() + ", " + field.getId());
     }
 
     @Transactional(readOnly = true)
-    public FieldResponse getField(Long id) {
+    public FieldResponseDto getField(Long id) {
         Field field = fieldRepository.findById(id).orElseThrow(() -> new FieldNotFoundException(id.toString()));
         return fieldMapper.fieldToFieldDto(field);
     }
 
     @Transactional(readOnly = true)
-    public List<FieldResponse> getFieldsByForm(Long form_id) {
+    public List<FieldResponseDto> getFieldsByForm(Long form_id) {
         Form form = formRepository.findById(form_id).orElseThrow(() -> new FormNotFoundException(form_id.toString()));
         return fieldRepository.findAllByForm(form)
                 .stream()
@@ -52,4 +55,32 @@ public class FieldService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public FieldResponseDto update(Long id, FieldRequestDto fieldRequestDto) {
+        Field fieldFromDb = getFieldById(id);
+        Form form = getFormById(fieldRequestDto.getFormId());
+
+        fieldFromDb.setFieldType(fieldRequestDto.getFieldType());
+        fieldFromDb.setOptions(fieldRequestDto.getOptions());
+        fieldFromDb.setActive(fieldRequestDto.getActive());
+        fieldFromDb.setForm(form);
+        fieldFromDb.setLabel(fieldRequestDto.getLabel());
+        fieldFromDb.setRequired(fieldRequestDto.getRequired());
+
+        fieldRepository.save(fieldFromDb);
+
+        return fieldMapper.fieldToFieldDto(fieldFromDb);
+    }
+
+    private Field getFieldById(Long fieldId) {
+        return fieldRepository
+                .findById(fieldId)
+                .orElseThrow(() -> new FieldNotFoundException(fieldId.toString()));
+    }
+
+    private Form getFormById(Long formId) {
+        return formRepository
+                .findById(formId)
+                .orElseThrow(() -> new FormNotFoundException(formId.toString()));
+    }
 }

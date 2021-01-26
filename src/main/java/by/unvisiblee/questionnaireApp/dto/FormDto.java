@@ -6,25 +6,33 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class FormDto {
-
-    private List<Field> fieldList;
+    private Long id;
+    private List<FieldResponseDto> fields;
     @NotBlank
-    private String username;
+    private Long userId;
 
 
-    public List<Field> getFieldList() {
-        return fieldList;
+    public List<FieldResponseDto> getFields() {
+        return fields;
     }
 
-    public void setFieldList(List<Field> fieldList) {
-        this.fieldList = fieldList;
+    public void setFields(List<FieldResponseDto> fields) {
+        this.fields = fields;
     }
 
-    public String getUsername() {
-        return username;
+    public Long getId() {
+        return id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

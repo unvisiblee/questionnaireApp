@@ -6,8 +6,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlSchema;
+import java.util.List;
 
-public class FieldRequest {
+public class FieldRequestDto {
     @NotBlank
     private String label;
     @NotNull
@@ -18,10 +20,18 @@ public class FieldRequest {
     private Boolean active;
     @NotNull
     private Long formId;
+    private List<String> options;
 
-    public FieldRequest() {
+    public FieldRequestDto() {
     }
 
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
 
     public Boolean getRequired() {
         return required;

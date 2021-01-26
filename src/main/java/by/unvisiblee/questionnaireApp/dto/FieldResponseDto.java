@@ -2,7 +2,9 @@ package by.unvisiblee.questionnaireApp.dto;
 
 import by.unvisiblee.questionnaireApp.model.FieldType;
 
-public class FieldResponse {
+import java.util.List;
+
+public class FieldResponseDto {
 
     private Long id;
     private String label;
@@ -10,8 +12,18 @@ public class FieldResponse {
     private Boolean required;
     private Boolean active;
     private Long formId;
+    private List<String> options;
 
-    public FieldResponse() {
+    public FieldResponseDto() {
+    }
+
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
     }
 
     public Long getId() {

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @PasswordMatches
-public class RegisterRequest {
+public class RegisterRequestDto {
     @NotBlank
     private String username;
     @NotBlank

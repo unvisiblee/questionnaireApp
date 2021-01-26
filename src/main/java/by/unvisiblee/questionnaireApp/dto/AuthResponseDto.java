@@ -1,11 +1,11 @@
 package by.unvisiblee.questionnaireApp.dto;
 
-public class AuthResponse {
+public class AuthResponseDto {
     private String authToken;
     private String username;
 
 
-    public AuthResponse(String authToken, String username) {
+    public AuthResponseDto(String authToken, String username) {
         this.authToken = authToken;
         this.username = username;
     }
