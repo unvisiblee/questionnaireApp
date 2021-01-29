@@ -1,6 +1,7 @@
 package by.unvisiblee.questionnaireApp.service;
 
 import by.unvisiblee.questionnaireApp.dto.FormDto;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.mapper.FormMapper;
 import by.unvisiblee.questionnaireApp.model.Form;
 import by.unvisiblee.questionnaireApp.model.User;
@@ -34,7 +35,7 @@ public class FormService {
     public FormDto findByUserId(Long userId) {
         Form form = formRepository
                 .findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException(userId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Form.class, userId.toString()));
         return formMapper.formToFormDto(form);
     }
 

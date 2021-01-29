@@ -1,7 +1,7 @@
 package by.unvisiblee.questionnaireApp.mapper;
 
 import by.unvisiblee.questionnaireApp.dto.ResponseDto;
-import by.unvisiblee.questionnaireApp.exception.FormNotFoundException;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.model.Form;
 import by.unvisiblee.questionnaireApp.model.Response;
 import by.unvisiblee.questionnaireApp.repository.FormRepository;
@@ -25,7 +25,7 @@ public abstract class ResponseMapper {
     protected Form getFormById(Long id) {
         return formRepository
                 .findById(id)
-                .orElseThrow(() -> new FormNotFoundException(id.toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Form.class, id.toString()));
     }
 
     @Autowired

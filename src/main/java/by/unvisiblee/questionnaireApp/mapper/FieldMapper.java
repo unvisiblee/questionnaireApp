@@ -2,14 +2,13 @@ package by.unvisiblee.questionnaireApp.mapper;
 
 import by.unvisiblee.questionnaireApp.dto.FieldRequestDto;
 import by.unvisiblee.questionnaireApp.dto.FieldResponseDto;
-import by.unvisiblee.questionnaireApp.exception.FormNotFoundException;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.model.Field;
 import by.unvisiblee.questionnaireApp.model.Form;
 import by.unvisiblee.questionnaireApp.repository.FormRepository;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
@@ -30,7 +29,7 @@ public abstract class FieldMapper {
     Field fieldResponseDtoToField(FieldResponseDto fieldResponseDto) {
         Form form = formRepository
                 .findById(fieldResponseDto.getFormId())
-                .orElseThrow(() -> new FormNotFoundException(fieldResponseDto.getFormId().toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Form.class, fieldResponseDto.getFormId().toString()));
         return fieldResponseDtoToField1(fieldResponseDto, form);
     }
 

@@ -1,5 +1,6 @@
 package by.unvisiblee.questionnaireApp.service;
 
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found!"));
+        User user = userOptional.orElseThrow(() -> new EntityNotFoundException(User.class, username));
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getEnabled(),
                 true, true, true, getAuthorities("USER"));

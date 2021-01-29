@@ -1,8 +1,7 @@
 package by.unvisiblee.questionnaireApp.mapper;
 
 import by.unvisiblee.questionnaireApp.dto.ResponseForFieldDto;
-import by.unvisiblee.questionnaireApp.exception.FieldNotFoundException;
-import by.unvisiblee.questionnaireApp.exception.ResponseNotFoundException;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.model.Field;
 import by.unvisiblee.questionnaireApp.model.Response;
 import by.unvisiblee.questionnaireApp.model.ResponseForField;
@@ -34,13 +33,13 @@ public abstract class ResponseForFieldMapper {
     protected Field getFieldById(Long id) {
         return fieldRepository
                 .findById(id)
-                .orElseThrow(() -> new FieldNotFoundException(id.toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Field.class, id.toString()));
     }
 
     protected Response getResponseById(Long id) {
         return responseRepository
                 .findById(id)
-                .orElseThrow(() -> new ResponseNotFoundException(id.toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Response.class, id.toString()));
     }
 
     @Autowired

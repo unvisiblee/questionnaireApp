@@ -2,6 +2,7 @@ package by.unvisiblee.questionnaireApp.service;
 
 import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
 import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
 import by.unvisiblee.questionnaireApp.exception.UserAlreadyExistException;
 import by.unvisiblee.questionnaireApp.repository.UserRepository;
@@ -54,7 +55,7 @@ public class AuthService {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+                .orElseThrow(() -> new EntityNotFoundException(User.class, principal.getUsername()));
     }
 
     @Transactional

@@ -2,8 +2,7 @@ package by.unvisiblee.questionnaireApp.service;
 
 import by.unvisiblee.questionnaireApp.dto.FieldRequestDto;
 import by.unvisiblee.questionnaireApp.dto.FieldResponseDto;
-import by.unvisiblee.questionnaireApp.exception.FieldNotFoundException;
-import by.unvisiblee.questionnaireApp.exception.FormNotFoundException;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.mapper.FieldMapper;
 import by.unvisiblee.questionnaireApp.model.Field;
 import by.unvisiblee.questionnaireApp.model.Form;
@@ -33,7 +32,7 @@ public class FieldService {
     @Transactional
     public void create(FieldRequestDto fieldRequestDto) {
         Form form = formRepository.findById(fieldRequestDto.getFormId())
-                    .orElseThrow(() -> new FormNotFoundException(fieldRequestDto.getFormId().toString()));
+                    .orElseThrow(() -> new EntityNotFoundException(Form.class, fieldRequestDto.getFormId().toString()));
 
         Field field = fieldMapper.fieldDtoToField(fieldRequestDto, form);
         fieldRepository.save(field);
@@ -42,13 +41,13 @@ public class FieldService {
 
     @Transactional(readOnly = true)
     public FieldResponseDto getField(Long id) {
-        Field field = fieldRepository.findById(id).orElseThrow(() -> new FieldNotFoundException(id.toString()));
+        Field field = fieldRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Field.class, id.toString()));
         return fieldMapper.fieldToFieldDto(field);
     }
 
     @Transactional(readOnly = true)
     public List<FieldResponseDto> getFieldsByForm(Long form_id) {
-        Form form = formRepository.findById(form_id).orElseThrow(() -> new FormNotFoundException(form_id.toString()));
+        Form form = formRepository.findById(form_id).orElseThrow(() -> new EntityNotFoundException(Form.class, form_id.toString()));
         return fieldRepository.findAllByForm(form)
                 .stream()
                 .map(fieldMapper::fieldToFieldDto)
@@ -75,12 +74,12 @@ public class FieldService {
     private Field getFieldById(Long fieldId) {
         return fieldRepository
                 .findById(fieldId)
-                .orElseThrow(() -> new FieldNotFoundException(fieldId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Field.class, fieldId.toString()));
     }
 
     private Form getFormById(Long formId) {
         return formRepository
                 .findById(formId)
-                .orElseThrow(() -> new FormNotFoundException(formId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException(Form.class, formId.toString()));
     }
 }
