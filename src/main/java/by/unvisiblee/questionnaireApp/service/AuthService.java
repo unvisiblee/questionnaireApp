@@ -1,23 +1,25 @@
 package by.unvisiblee.questionnaireApp.service;
 
-import by.unvisiblee.questionnaireApp.dto.AuthResponse;
-import by.unvisiblee.questionnaireApp.dto.LoginRequest;
+import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
+import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
+import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
+
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
 import by.unvisiblee.questionnaireApp.exception.UserAlreadyExistException;
 import by.unvisiblee.questionnaireApp.repository.UserRepository;
 import by.unvisiblee.questionnaireApp.repository.VerificationTokenRepository;
-import by.unvisiblee.questionnaireApp.dto.RegisterRequest;
+import by.unvisiblee.questionnaireApp.dto.RegisterRequestDto;
 import by.unvisiblee.questionnaireApp.model.NotificationEmail;
 import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.model.VerificationToken;
 import by.unvisiblee.questionnaireApp.security.JwtProvider;
 import by.unvisiblee.questionnaireApp.util.MailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,35 +37,46 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final FormService formService;
 
     public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository,
                        VerificationTokenRepository verificationTokenRepository,
                        MailService mailService, AuthenticationManager authenticationManager,
-                       JwtProvider jwtProvider) {
+                       JwtProvider jwtProvider, FormService formService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.formService = formService;
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException(User.class, principal.getUsername()));
     }
 
     @Transactional
-    public void signup(RegisterRequest registerRequest) {
+    public void signup(RegisterRequestDto registerRequestDto) {
 
-        if (userRepository.existsByUsername(registerRequest.getUsername()))
-            throw new UserAlreadyExistException(registerRequest.getUsername(), "username");
-        if (userRepository.existsByEmail(registerRequest.getEmail().toLowerCase()))
-            throw new UserAlreadyExistException(registerRequest.getEmail(), "email");
+        if (userRepository.existsByUsername(registerRequestDto.getUsername()))
+            throw new UserAlreadyExistException(registerRequestDto.getUsername(), "username");
+        if (userRepository.existsByEmail(registerRequestDto.getEmail().toLowerCase()))
+            throw new UserAlreadyExistException(registerRequestDto.getEmail(), "email");
 
 
         User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setFirstName(registerRequest.getFirstName());
-        user.setLastName(registerRequest.getLastName());
-        user.setPhoneNumber(registerRequest.getPhoneNumber());
+        user.setUsername(registerRequestDto.getUsername());
+        user.setEmail(registerRequestDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
+        user.setFirstName(registerRequestDto.getFirstName());
+        user.setLastName(registerRequestDto.getLastName());
+        user.setPhoneNumber(registerRequestDto.getPhoneNumber());
+
         user.setCreated(Instant.now());
         user.setEnabled(false);
 
@@ -104,13 +117,16 @@ public class AuthService {
         User user = verificationToken.getUser();
         user.setEnabled(true);
         userRepository.save(user);
+
+        formService.create(user); // when user is activated - create blank form.
     }
 
 
-    public AuthResponse login(LoginRequest loginRequest) {
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    public AuthResponseDto login(LoginRequestDto loginRequestDto) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         String authToken = jwtProvider.generateToken(auth);
-        return new AuthResponse(authToken, loginRequest.getUsername());
+        return new AuthResponseDto(authToken, loginRequestDto.getUsername());
+
     }
 }

@@ -1,5 +1,12 @@
 package by.unvisiblee.questionnaireApp.controller;
 
+
+import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
+import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
+import by.unvisiblee.questionnaireApp.dto.RegisterRequestDto;
+import by.unvisiblee.questionnaireApp.service.AuthService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import by.unvisiblee.questionnaireApp.dto.AuthResponse;
 import by.unvisiblee.questionnaireApp.dto.LoginRequest;
 import by.unvisiblee.questionnaireApp.dto.RegisterRequest;
@@ -15,7 +22,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
-@Validated
 public class AuthController {
 
     private final AuthService authService;
@@ -25,8 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody @Valid final RegisterRequest registerRequest) {
-        authService.signup(registerRequest);
+    public ResponseEntity<String> signup(@RequestBody @Valid final RegisterRequestDto registerRequestDto) {
+        authService.signup(registerRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -37,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+    public AuthResponseDto login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        return authService.login(loginRequestDto);
     }
 }

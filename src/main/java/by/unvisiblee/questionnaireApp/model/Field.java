@@ -1,20 +1,27 @@
 package by.unvisiblee.questionnaireApp.model;
 
+import org.hibernate.annotations.CollectionType;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "field")
+@Table(name = "field", schema = "public")
 public class Field extends BaseEntity{
 
-    @Column(name = "label")
+    @Column(name = "label", unique = true, nullable = false)
     private String label;
 
-    @Column(name = "field_type")
+    @Column(name = "field_type", nullable = false)
+
     @Enumerated(EnumType.STRING)
     private FieldType fieldType;
 
     @Column(name = "required")
     private boolean required;
+
+    @ElementCollection
+    private List<String> options;
 
     @Column(name = "active")
     private boolean active;
@@ -22,6 +29,14 @@ public class Field extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="form_id", referencedColumnName="id")
     private Form form;
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
 
     public Field() {
     }

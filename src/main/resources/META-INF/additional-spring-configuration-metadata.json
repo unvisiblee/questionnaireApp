@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "questionnaire.keystore.password",
+      "type": "java.lang.String",
+      "description": "Password to access key store."
+    }
+  ] }

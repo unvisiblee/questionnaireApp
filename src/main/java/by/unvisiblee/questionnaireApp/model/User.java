@@ -11,17 +11,16 @@ import java.util.List;
 @Table(name = "usr")
 public class User extends BaseEntity {
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany
-    @JoinTable(name = "user_forms")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Form> forms;
 
     @Column(name = "first_name")
@@ -33,7 +32,8 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "created")
+
+    @Column(name = "created", nullable = false)
     private Instant created;
 
     @Column(name = "enabled")
@@ -54,6 +54,14 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.created = created;
         this.enabled = enabled;
+    }
+
+    public List<Form> getForms() {
+        return forms;
+    }
+
+    public void setForms(List<Form> forms) {
+        this.forms = forms;
     }
 
     public String getUsername() {
