@@ -20,7 +20,6 @@ import java.security.KeyStore;
 import by.unvisiblee.questionnaireApp.service.UserDetailsServiceImpl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.security.KeyStoreException;
 
 @EnableWebSecurity

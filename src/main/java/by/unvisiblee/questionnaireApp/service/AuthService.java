@@ -3,6 +3,7 @@ package by.unvisiblee.questionnaireApp.service;
 import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
 import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
 import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
+
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
 import by.unvisiblee.questionnaireApp.exception.UserAlreadyExistException;
 import by.unvisiblee.questionnaireApp.repository.UserRepository;
@@ -13,6 +14,7 @@ import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.model.VerificationToken;
 import by.unvisiblee.questionnaireApp.security.JwtProvider;
 import by.unvisiblee.questionnaireApp.util.MailService;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -74,6 +76,7 @@ public class AuthService {
         user.setFirstName(registerRequestDto.getFirstName());
         user.setLastName(registerRequestDto.getLastName());
         user.setPhoneNumber(registerRequestDto.getPhoneNumber());
+
         user.setCreated(Instant.now());
         user.setEnabled(false);
 
@@ -124,5 +127,6 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(auth);
         String authToken = jwtProvider.generateToken(auth);
         return new AuthResponseDto(authToken, loginRequestDto.getUsername());
+
     }
 }
