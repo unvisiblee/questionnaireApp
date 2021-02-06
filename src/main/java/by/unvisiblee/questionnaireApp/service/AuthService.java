@@ -2,9 +2,11 @@ package by.unvisiblee.questionnaireApp.service;
 
 import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
 import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
+import by.unvisiblee.questionnaireApp.dto.UserDto;
 import by.unvisiblee.questionnaireApp.exception.EntityNotFoundException;
 import by.unvisiblee.questionnaireApp.exception.QuestionnaireServiceException;
 import by.unvisiblee.questionnaireApp.exception.UserAlreadyExistException;
+import by.unvisiblee.questionnaireApp.mapper.UserMapper;
 import by.unvisiblee.questionnaireApp.repository.UserRepository;
 import by.unvisiblee.questionnaireApp.repository.VerificationTokenRepository;
 import by.unvisiblee.questionnaireApp.dto.RegisterRequestDto;
@@ -17,7 +19,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +37,12 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final FormService formService;
+    private final UserMapper userMapper;
 
     public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository,
                        VerificationTokenRepository verificationTokenRepository,
                        MailService mailService, AuthenticationManager authenticationManager,
-                       JwtProvider jwtProvider, FormService formService) {
+                       JwtProvider jwtProvider, FormService formService, UserMapper userMapper) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
@@ -48,14 +50,19 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.formService = formService;
+        this.userMapper = userMapper;
+    }
+
+    public String getCurrentUsername() {
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        return loggedInUser.getName();
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public User getCurrentUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
-                getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException(User.class, principal.getUsername()));
+        String username = getCurrentUsername();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, username));
     }
 
     @Transactional
@@ -124,5 +131,34 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(auth);
         String authToken = jwtProvider.generateToken(auth);
         return new AuthResponseDto(authToken, loginRequestDto.getUsername());
+    }
+
+    public UserDto getUserByUsername(String username) {
+        User userFromDb = null;
+        if (getCurrentUsername().equals(username)) {
+            userFromDb = userRepository
+                    .findByUsername(username)
+                    .orElseThrow(
+                            () -> new EntityNotFoundException(User.class, username)
+                    );
+        }
+        return userMapper.userToUserDto(userFromDb);
+    }
+
+    public UserDto updateUser(UserDto userDto) {
+        User userFromDb = userRepository
+                .findById(userDto.getId())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(User.class, userDto.getId().toString()
+                        ));
+
+        userFromDb.setEmail(userDto.getEmail());
+        userFromDb.setFirstName(userDto.getFirstName());
+        userFromDb.setLastName(userDto.getLastName());
+        userFromDb.setPhoneNumber(userDto.getPhoneNumber());
+
+        userRepository.save(userFromDb);
+
+        return userMapper.userToUserDto(userFromDb);
     }
 }
