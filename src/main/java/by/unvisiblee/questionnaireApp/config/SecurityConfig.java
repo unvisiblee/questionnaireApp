@@ -45,9 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
+
                 .antMatchers("/api/auth/user/**").authenticated()
                 .anyRequest()
-                .authenticated();
+                .authenticated().and().cors();
         httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -76,10 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS")
-                        .allowedOrigins("*")
-                        .allowedHeaders("*");
+                registry.addMapping("/**").allowedMethods("*");
             }
         };
     }
