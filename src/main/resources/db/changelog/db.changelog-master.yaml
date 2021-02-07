@@ -304,4 +304,3 @@ databaseChangeLog:
             minValue: 1
             sequenceName: hibernate_sequence
             startValue: 1
-

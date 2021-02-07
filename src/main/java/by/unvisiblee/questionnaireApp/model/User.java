@@ -31,6 +31,7 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+
     @Column(name = "created", nullable = false)
     private Instant created;
 
@@ -53,7 +54,6 @@ public class User extends BaseEntity {
         this.created = created;
         this.enabled = enabled;
     }
-
 
     public List<Form> getForms() {
         return forms;

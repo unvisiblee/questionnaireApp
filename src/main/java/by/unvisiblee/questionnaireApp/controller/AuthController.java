@@ -1,11 +1,10 @@
 package by.unvisiblee.questionnaireApp.controller;
 
+
 import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
 import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
 import by.unvisiblee.questionnaireApp.dto.RegisterRequestDto;
 import by.unvisiblee.questionnaireApp.dto.UserDto;
-import by.unvisiblee.questionnaireApp.mapper.UserMapper;
-import by.unvisiblee.questionnaireApp.model.User;
 import by.unvisiblee.questionnaireApp.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -13,6 +13,7 @@ public class Field extends BaseEntity{
     private String label;
 
     @Column(name = "field_type", nullable = false)
+
     @Enumerated(EnumType.STRING)
     private FieldType fieldType;
 

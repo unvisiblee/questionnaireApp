@@ -39,5 +39,6 @@ public class FieldController {
     @GetMapping("/by-form/{form_id}")
     public ResponseEntity<List<FieldResponseDto>> getFieldsByForm(@PathVariable Long form_id) {
         return ResponseEntity.status(HttpStatus.OK).body(fieldService.getFieldsByForm(form_id));
+
     }
 }
