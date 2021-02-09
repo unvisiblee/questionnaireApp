@@ -38,7 +38,11 @@ public class ResponseService {
     }
 
 
-    public List<Response> getResponsesByFormId(Long formId) {
-        return responseRepository.findAllByFormId(formId);
+    public List<ResponseDto> getResponsesByFormId(Long formId) {
+        return responseRepository
+                .findAllByFormId(formId)
+                .stream()
+                .map(responseMapper::responseToResponseDto)
+                .collect(Collectors.toList());
     }
 }

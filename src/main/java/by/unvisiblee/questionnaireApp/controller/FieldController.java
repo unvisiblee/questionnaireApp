@@ -39,6 +39,11 @@ public class FieldController {
     @GetMapping("/by-form/{form_id}")
     public ResponseEntity<List<FieldResponseDto>> getFieldsByForm(@PathVariable Long form_id) {
         return ResponseEntity.status(HttpStatus.OK).body(fieldService.getFieldsByForm(form_id));
+    }
 
+    @DeleteMapping("/{fieldId}")
+    public ResponseEntity<String> deleteField(@PathVariable Long fieldId) {
+        fieldService.delete(fieldId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

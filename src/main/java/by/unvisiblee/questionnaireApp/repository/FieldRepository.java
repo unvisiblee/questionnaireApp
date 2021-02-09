@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface FieldRepository extends JpaRepository<Field, Long> {
     List<Field> findAllByForm(Form form);
-
+    void deleteById(Long id);
 }

@@ -1,5 +1,7 @@
 package by.unvisiblee.questionnaireApp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class ResponseForField extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "response_id", referencedColumnName = "id")
+    @JsonBackReference
     private Response response;
 
 

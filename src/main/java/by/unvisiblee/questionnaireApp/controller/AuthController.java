@@ -1,10 +1,7 @@
 package by.unvisiblee.questionnaireApp.controller;
 
 
-import by.unvisiblee.questionnaireApp.dto.AuthResponseDto;
-import by.unvisiblee.questionnaireApp.dto.LoginRequestDto;
-import by.unvisiblee.questionnaireApp.dto.RegisterRequestDto;
-import by.unvisiblee.questionnaireApp.dto.UserDto;
+import by.unvisiblee.questionnaireApp.dto.*;
 import by.unvisiblee.questionnaireApp.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +44,11 @@ public class AuthController {
     @PutMapping("/user/update")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.updateUser(userDto));
+    }
+
+    @PutMapping("/user/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        this.authService.changePassword(changePasswordDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

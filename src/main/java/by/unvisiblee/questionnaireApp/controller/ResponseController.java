@@ -20,7 +20,7 @@ public class ResponseController {
     }
 
     @GetMapping("/by-form/{formId}")
-    public ResponseEntity<List<Response>> getResponsesByFormId(@PathVariable Long formId) {
+    public ResponseEntity<List<ResponseDto>> getResponsesByFormId(@PathVariable Long formId) {
         return ResponseEntity.status(HttpStatus.OK).body(responseService.getResponsesByFormId(formId));
     }
 
