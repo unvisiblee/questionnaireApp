@@ -18,9 +18,14 @@ public class FormController {
         this.formService = formService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/by-user/{userId}")
     public ResponseEntity<FormDto> getFormByUserId(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(formService.findByUserId(userId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FormDto> getFormById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(formService.findById(id));
     }
 
 

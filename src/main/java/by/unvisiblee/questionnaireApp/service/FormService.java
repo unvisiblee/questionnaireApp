@@ -39,4 +39,11 @@ public class FormService {
         return formMapper.formToFormDto(form);
     }
 
+    public FormDto findById(Long id) {
+        Form form = formRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Form.class, id.toString()));
+        return formMapper.formToFormDto(form);
+    }
+
 }
