@@ -11,11 +11,6 @@ public class ResponseWebSocketController {
     @MessageMapping("/response")
     @SendTo("/questionnaire/response")
     public ResponseDto sendNewResponse(ResponseDto responseDto) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return responseDto;
     }
 }
