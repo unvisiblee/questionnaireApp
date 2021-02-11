@@ -194,7 +194,7 @@ databaseChangeLog:
             constraintName: foreign_key_for_response_field_id
             deferrable: false
             initiallyDeferred: false
-            onDelete: NO ACTION
+            onDelete: CASCADE
             onUpdate: NO ACTION
             referencedColumnNames: id
             referencedTableName: field
@@ -206,7 +206,7 @@ databaseChangeLog:
             constraintName: foreign_key_for_field_options
             deferrable: false
             initiallyDeferred: false
-            onDelete: NO ACTION
+            onDelete: CASCADE
             onUpdate: NO ACTION
             referencedColumnNames: id
             referencedTableName: field

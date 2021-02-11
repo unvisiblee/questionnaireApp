@@ -4,5 +4,10 @@
       "name": "questionnaire.keystore.password",
       "type": "java.lang.String",
       "description": "Password to access key store."
+    },
+    {
+      "name": "questionnaire.frontend.url",
+      "type": "java.lang.String",
+      "description": "Description for questionnaire.frontend.url."
     }
   ] }

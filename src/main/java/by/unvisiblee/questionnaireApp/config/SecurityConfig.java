@@ -5,7 +5,7 @@ import by.unvisiblee.questionnaireApp.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import java.security.KeyStore;
-import by.unvisiblee.questionnaireApp.service.UserDetailsServiceImpl;
+
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.security.KeyStoreException;
@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final FrontendProperties frontendProperties;
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -34,9 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    public SecurityConfig(@Qualifier(value = "userDetailsServiceImpl") UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(@Qualifier(value = "userDetailsServiceImpl") UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter, FrontendProperties frontendProperties) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthFilter = jwtAuthFilter;
+        this.frontendProperties = frontendProperties;
     }
 
     @Override
@@ -44,8 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/form/**").permitAll()
+                .antMatchers("/responses").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/response").permitAll()
+                .antMatchers("/api/auth/user/**").authenticated()
                 .anyRequest()
-                .authenticated();
+                .authenticated().and().cors();
         httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -74,8 +80,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*");
+                registry
+                        .addMapping("/**")
+                        .allowedMethods("*")
+                        .allowedOrigins(frontendProperties.getUrl());
             }
         };
     }

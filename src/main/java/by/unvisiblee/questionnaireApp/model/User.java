@@ -1,6 +1,5 @@
 package by.unvisiblee.questionnaireApp.model;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

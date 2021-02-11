@@ -82,4 +82,8 @@ public class FieldService {
                 .findById(formId)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, formId.toString()));
     }
+
+    public void delete(Long fieldId) {
+        fieldRepository.deleteById(fieldId);
+    }
 }

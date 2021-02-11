@@ -1,5 +1,7 @@
 package by.unvisiblee.questionnaireApp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public class Response extends BaseEntity {
     private Form form;
 
     @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ResponseForField> responseForFields;
 
 
