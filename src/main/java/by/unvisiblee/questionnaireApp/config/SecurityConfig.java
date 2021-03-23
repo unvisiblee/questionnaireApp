@@ -2,9 +2,11 @@ package by.unvisiblee.questionnaireApp.config;
 
 import by.unvisiblee.questionnaireApp.exception.JwtException;
 import by.unvisiblee.questionnaireApp.security.JwtAuthFilter;
+import liquibase.pro.packaged.L;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -35,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    public SecurityConfig(@Qualifier(value = "userDetailsServiceImpl") UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter, FrontendProperties frontendProperties) {
+    public SecurityConfig(@Qualifier(value = "userDetailsServiceImpl") UserDetailsService userDetailsService, @Lazy JwtAuthFilter jwtAuthFilter, FrontendProperties frontendProperties) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthFilter = jwtAuthFilter;
         this.frontendProperties = frontendProperties;

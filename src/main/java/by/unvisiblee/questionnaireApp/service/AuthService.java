@@ -116,7 +116,6 @@ public class AuthService {
         }
         
         activateUser(verificationToken.get());
-
     }
 
     @Transactional
